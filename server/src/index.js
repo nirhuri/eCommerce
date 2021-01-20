@@ -7,9 +7,11 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const userRoutes = require('./routes/user');
+const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin/auth');
 
-app.use('/api', userRoutes)
+app.use('/api', authRoutes);
+app.use('/api', adminRoutes);
 
 const port = process.env.PORT;
 app.listen(port, () => {
