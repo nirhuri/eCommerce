@@ -6,13 +6,14 @@ exports.addItemToCart = (req, res) => {
     if (cart) {
       // if cart already exist, we return the cart
 
-      const product = req.body.cartItems.product;
+        const product = req.body.cartItems.product;
+        console.log(product)
       const item = cart.cartItems.find((c) => c.product == product);
       if (item) {
         Cart.findOneAndUpdate({ "user": req.user._id, "cartItems.product": product },
           {
             "$set": {
-              "cartItems": {
+              "cartItems.$": {
                 ...req.body.cartItems,
                 quantity: item.quantity + req.body.cartItems.quantity,
               }
