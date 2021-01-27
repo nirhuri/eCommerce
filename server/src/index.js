@@ -2,11 +2,13 @@ const express = require('express');
 require('dotenv').config();
 require('./db/mongo');
 const path = require('path');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'uploads')));
+app.use(cors());
 
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin/auth');
