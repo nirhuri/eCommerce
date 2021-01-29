@@ -65,7 +65,7 @@ export const signout = () => {
     if (res.status === 200) {
           localStorage.clear();
           dispatch({
-            type: authConstants.LOGOUT_REQUEST,
+            type: authConstants.LOGOUT_SUCCESS,
           });
     } else {
 
