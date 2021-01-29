@@ -21,13 +21,19 @@ export default (state = initialState, action) => {
             } 
             break;
         case authConstants.LOGIN_SUCCESS:
-            state = { 
+            state = {
                 ...state,
                 user: action.payload.user,
                 token: action.payload.token,
                 authenticate: true,
                 authenticating: false
             }
+            break;
+        case authConstants.LOGOUT_REQUEST:
+            state = {
+                ...initialState
+            }
+            break;
     }
 
     return state;
