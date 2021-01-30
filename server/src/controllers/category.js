@@ -27,13 +27,16 @@ exports.addCategory = (req, res) => {
     slug: slugify(req.body.name),
   };
 
+  console.log(req.body.parendId)
     if (req.file) {
       categoryObj.categoryImage =
         `${process.env.DOMAIN}:${process.env.PORT}/public/` +
         req.file.filename;
     }
   
-  if (req.body.parentId) categoryObj.parentId = req.body.parentId;
+  if (req.body.parentId) {
+    categoryObj.parentId = req.body.parentId;
+  }
 
   const cat = new Category(categoryObj);
   cat.save((error, category) => {
