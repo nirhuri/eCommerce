@@ -21,7 +21,6 @@ function Category() {
   const handleClose = () => {
     const form = new FormData();
 
-    console.log(parentCategoryId)
     form.append("name", categoryName);
     form.append("parentId", parentCategoryId);
     form.append("categoryImage", categoryImage);
