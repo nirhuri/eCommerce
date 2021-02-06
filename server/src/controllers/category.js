@@ -1,5 +1,6 @@
 const slugify = require("slugify");
 const Category = require("../models/category");
+const { getAsync, setAsync, cache } = require("../redis");
 
 function createCategories(categories, parentId = null) {
   const categoryList = [];
@@ -7,8 +8,7 @@ function createCategories(categories, parentId = null) {
 
   if (parentId == null)
     category = categories.filter((cat) => cat.parentId == undefined);
-  else
-    category = categories.filter((cat) => cat.parentId == parentId);
+  else category = categories.filter((cat) => cat.parentId == parentId);
 
   category.forEach((cat) => {
     categoryList.push({
@@ -22,35 +22,52 @@ function createCategories(categories, parentId = null) {
   return categoryList;
 }
 
-exports.addCategory = (req, res) => {
+const addCategory = (req, res) => {
   const categoryObj = {
     name: req.body.name,
     slug: slugify(req.body.name),
   };
 
-    if (req.file) {
-      categoryObj.categoryImage =
-        `${process.env.DOMAIN}:${process.env.PORT}/public/` +
-        req.file.filename;
-    }
-  
+  if (req.file) {
+    categoryObj.categoryImage =
+      `${process.env.DOMAIN}:${process.env.PORT}/public/` + req.file.filename;
+  }
+
   if (req.body.parentId) {
     categoryObj.parentId = req.body.parentId;
   }
 
   const cat = new Category(categoryObj);
+  console.log(cat);
   cat.save((error, category) => {
     if (error) return res.status(400).json({ error });
     if (Category) return res.status(201).json({ category });
   });
 };
 
-exports.getCategories = (req, res) => {
-  Category.find({}).exec((error, categories) => {
-    if (error) return res.status(400).json({ error });
-    if (categories) {
-      const categoryList = createCategories(categories);
-      return res.status(200).json({ categoryList });
-    }
-  });
+const getCategories = async (req, res) => {
+  const key = "/categories";
+  const cached = await getAsync(key).catch(console.error);
+
+  if (cached) {
+    const data = JSON.parse(cached);
+    console.log(`using cache: ${key}`);
+    const categoryList = createCategories(data);
+    return res.status(200).json({ categoryList });
+  } else {
+    Category.find({}).exec((error, categories) => {
+      if (error) return res.status(400).json({ error });
+      if (categories) {
+        setAsync(key, JSON.stringify(categories)).catch(console.error);
+        cache.expire(key, 60 * 10);
+        const categoryList = createCategories(categories);
+        return res.status(200).json({ categoryList });
+      }
+    });
+  }
+};
+
+module.exports = {
+  getCategories,
+  addCategory,
 };
