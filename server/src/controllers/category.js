@@ -1,6 +1,6 @@
 const slugify = require("slugify");
 const Category = require("../models/category");
-const { getAsync, setAsync, cache } = require("../redis");
+const { getAsync, setAsync, cache, deleteAsync } = require("../redis");
 
 function createCategories(categories, parentId = null) {
   const categoryList = [];
@@ -22,7 +22,7 @@ function createCategories(categories, parentId = null) {
   return categoryList;
 }
 
-const addCategory = (req, res) => {
+const addCategory = async (req, res) => {
   const categoryObj = {
     name: req.body.name,
     slug: slugify(req.body.name),
@@ -37,11 +37,12 @@ const addCategory = (req, res) => {
     categoryObj.parentId = req.body.parentId;
   }
 
-  const cat = new Category(categoryObj);
-  console.log(cat);
+  await deleteAsync('/categories')
+
+  let cat = new Category(categoryObj);
   cat.save((error, category) => {
     if (error) return res.status(400).json({ error });
-    if (Category) return res.status(201).json({ category });
+    if (category) return res.status(201).json({ category });
   });
 };
 

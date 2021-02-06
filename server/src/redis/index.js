@@ -12,5 +12,6 @@ module.exports = {
     ...cache,
     getAsync: promisify(cache.get).bind(cache),
     setAsync: promisify(cache.set).bind(cache),
-    keysAsync: promisify(cache.keys).bind(cache)
+    keysAsync: promisify(cache.keys).bind(cache),
+    deleteAsync: promisify(cache.del).bind(cache)
 }

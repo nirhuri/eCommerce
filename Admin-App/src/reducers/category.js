@@ -6,7 +6,7 @@ const initialState = {
     error: null
 }
 
-const buildNewCategories = (id, categories, newCategory) => {
+const buildNewCategories = (parentId, categories, newCategory) => {
     let myCategories = [];
     let newCat = {
       _id: newCategory._id,
@@ -15,27 +15,32 @@ const buildNewCategories = (id, categories, newCategory) => {
       parentId: newCategory.parentId,
       children: newCategory.children,
     };
-    categories.forEach(cat => {
-        if (cat.parentId && cat.parentId === id) {
-                    myCategories.push({
-                      ...cat,
-                      children:
-                        cat.children && cat.children.length > 0
-                              ? buildNewCategories(id, [...cat.children, newCat], newCat)
-                          : [],
-                    });
-        } else {
-                    myCategories.push({
-                      ...cat,
-                      children:
-                        cat.children && cat.children.length > 0
-                          ? buildNewCategories(id, cat.children, newCategory)
-                          : [],
-                    });
-        }
 
-        return myCategories;
+    categories.forEach(cat => {
+        if (cat._id == parentId) {
+          myCategories.push({
+            ...cat,
+            children:
+              cat.children && cat.children.length > 0
+                ? buildNewCategories(
+                    parentId,
+                    [...cat.children, newCat],
+                    newCategory
+                  )
+                : []
+          });
+        } else {
+          myCategories.push({
+            ...cat,
+            children:
+              cat.children && cat.children.length > 0
+                ? buildNewCategories(parentId, cat.children, newCategory)
+                : [],
+          });
+        }
     })
+            console.log(myCategories);
+            return myCategories;
 }
 
 export default (state = initialState, action) => {
@@ -55,7 +60,7 @@ export default (state = initialState, action) => {
         case categoryConstant.ADD_NEW_CATEGORY_SUCCESS:
             state = {
                 ...state,
-                categories: buildNewCategories(state.categories, action.payload.category),
+                categories: buildNewCategories(action.payload.category.parentId, state.categories, action.payload.category),
                 loading: false
             }
             break;
