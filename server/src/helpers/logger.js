@@ -1,10 +1,10 @@
 class Logger {
     constructor() {
-        if (Logger.instance == null) {
+        if (this.instance == null) {
             this.logs = [];
-            Logger.instance = this;
+            this.instance = this;
         }
-        return Logger.instance;
+        return this.instance;
     }
 
     log(message) {
@@ -13,7 +13,7 @@ class Logger {
     }
 
     printLogCount() {
-        cinsole.log(`LOGGER: ${this.logs.length} Logs`);
+        console.log(`LOGGER: ${this.logs.length} Logs`);
     }
 }
 

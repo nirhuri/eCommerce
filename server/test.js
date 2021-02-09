@@ -131,21 +131,28 @@
 // console.log(getByValue(people, "jhon"));
 // console.log(getByValue(people, "abdo"));
 
-arr = ['a', 'b', 'c', 'b', 'a'];
-obj = {}
+// arr = ['a', 'b', 'c', 'b', 'a'];
+// obj = {}
 
-arr.forEach(element => {
-    if (obj[element] >= 0) {
-        obj[element] += 1
-    } else {
-        obj[element] = 0;
-    }
-});
+// arr.forEach(element => {
+//     if (obj[element] >= 0) {
+//         obj[element] += 1
+//     } else {
+//         obj[element] = 0;
+//     }
+// });
 
-let keys = Object.keys(obj);
+// let keys = Object.keys(obj);
 
-keys.forEach(e => {
-    if (obj[e] == 0) {
-        console.log(e)
-    }
-})
+// keys.forEach(e => {
+//     if (obj[e] == 0) {
+//         console.log(e)
+//     }
+// })
+
+
+const { logger } = require('./src/helpers/logger');
+const { test } = require('./test2')
+logger.log("Hi there");
+test();
+logger.printLogCount();
