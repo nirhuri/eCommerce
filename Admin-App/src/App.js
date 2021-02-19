@@ -8,7 +8,7 @@ import Orders from './containers/Orders';
 import Category from './containers/Category';
 import PrivateRoute from './components/HOC/PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
-import { isUserLoggedIn } from './actions';
+import { isUserLoggedIn, getAllCategory } from './actions';
 
 function App() {
 
@@ -19,6 +19,8 @@ function App() {
       if (!auth.authenticate) {
         dispatch(isUserLoggedIn());
       }
+
+      dispatch(getAllCategory());
     }, []);
   
   return (

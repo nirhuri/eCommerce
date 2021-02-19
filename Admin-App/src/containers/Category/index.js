@@ -15,7 +15,7 @@ function Category() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllCategory());
+    //dispatch(getAllCategory());
   }, []);
 
   const handleClose = () => {
